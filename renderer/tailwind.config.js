@@ -1,5 +1,5 @@
 const colors = require("tailwindcss/colors");
-
+const scrollbar = require("tailwind-scrollbar");
 module.exports = {
   content: [
     "./renderer/pages/**/*.{js,ts,jsx,tsx}",
@@ -17,5 +17,5 @@ module.exports = {
       fontFamily: {},
     },
   },
-  plugins: [],
+  plugins: [scrollbar],
 };

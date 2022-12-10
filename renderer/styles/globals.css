@@ -7,3 +7,9 @@
     @apply bg-gray-400 text-white;
   }
 }
+
+@layer utilities {
+  .scrollbar-medium::-webkit-scrollbar {
+    width: 7px;
+  }
+}
