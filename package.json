@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "electron-serve": "^1.1.0",
-    "electron-store": "^8.1.0"
+    "electron-store": "^8.1.0",
+    "path": "^0.12.7",
+    "sqlite3": "^5.1.2"
   },
   "devDependencies": {
     "@types/node": "^16.11.7",

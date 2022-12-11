@@ -3,10 +3,6 @@ import serve from "electron-serve";
 import { ipcMain } from "electron";
 import { createWindow } from "./helpers";
 
-ipcMain.on("test", (evt, payload) => {
-  console.log(evt, payload);
-});
-
 const isProd: boolean = process.env.NODE_ENV === "production";
 
 if (isProd) {
@@ -34,4 +30,12 @@ if (isProd) {
 
 app.on("window-all-closed", () => {
   app.quit();
+});
+
+const db = require("./db/getdata.ts");
+
+ipcMain.on("test", (evt, payload) => {
+  console.log(payload);
+
+  db.insert(payload);
 });
