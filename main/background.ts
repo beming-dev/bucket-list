@@ -1,6 +1,11 @@
 import { app } from "electron";
 import serve from "electron-serve";
+import { ipcMain } from "electron";
 import { createWindow } from "./helpers";
+
+ipcMain.on("test", (evt, payload) => {
+  console.log(evt, payload);
+});
 
 const isProd: boolean = process.env.NODE_ENV === "production";
 
@@ -15,7 +20,7 @@ if (isProd) {
 
   const mainWindow = createWindow("main", {
     width: 1440,
-    height: 600,
+    height: 1000,
   });
 
   if (isProd) {
