@@ -4,6 +4,7 @@ import {
   BrowserWindowConstructorOptions,
 } from "electron";
 import Store from "electron-store";
+import path from "path";
 
 export default (
   windowName: string,
@@ -77,6 +78,7 @@ export default (
       nodeIntegration: true,
       contextIsolation: false,
       ...options.webPreferences,
+      preload: path.join(__dirname, "../main/helpers/preload.ts"),
     },
   };
   win = new BrowserWindow(browserOptions);

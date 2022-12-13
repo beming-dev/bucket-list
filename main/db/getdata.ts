@@ -4,7 +4,6 @@ const path = require("path");
 let isConn = false;
 
 let dbPath = path.join(__dirname, "../sqliteDB/bucketlist.db");
-console.log(dbPath);
 
 let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
@@ -19,23 +18,54 @@ let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
         console.log("create", arg);
       }
     );
+    db.run(
+      "CREATE TABLE IF NOT EXISTS DONE ( IDX INTEGER PRIMARY KEY, DES TEXT, DATE TEXT )",
+      [],
+      (arg) => {
+        console.log("create", arg);
+      }
+    );
   }
 });
 
-const insert = function (arg) {
+const insert = async function (arg) {
   if (isConn) {
-    db.run(
+    await db.run(
       'INSERT INTO BUCKET(DES,DATE) VALUES(?,datetime("now"))',
       [arg],
       (err) => {
-        //console.log(`A row has been inserted with rowid ${this.lastID}`);
         if (err) {
           return console.log(err.message);
         }
       }
     );
-    console.log("ok complete");
   }
 };
 
-export { insert };
+const select = async function (table) {
+  const list = {
+    bucket: [],
+    done: [],
+  };
+  if (isConn) {
+    await db.all(`SELECT * FROM BUCKET`, [], (err, rows) => {
+      if (err) {
+        return console.log(err.message);
+      }
+      rows.forEach((row) => {
+        list.bucket.push(row);
+      });
+    });
+    await db.all(`SELECT * FROM DONE`, [], (err, rows) => {
+      if (err) {
+        return console.log(err.message);
+      }
+      rows.forEach((row) => {
+        list.done.push(row);
+      });
+    });
+    return list;
+  }
+};
+
+export { insert, select };
