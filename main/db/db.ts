@@ -21,11 +21,11 @@ createBucket.run();
 createDone.run();
 
 const insert = (arg) => {
-  const query = db.prepare(
+  const insert = db.prepare(
     "INSERT INTO BUCKET(DES,DATE) VALUES(?, datetime('now'))"
   );
 
-  query.run(arg);
+  insert.run(arg);
 };
 
 const select = () => {
@@ -42,4 +42,10 @@ const select = () => {
   return list;
 };
 
-export { insert, select };
+const deleteItem = (id) => {
+  console.log(id);
+  const deleteList = db.prepare(`DELETE FROM BUCKET WHERE IDX=?`);
+  deleteList.run(id);
+};
+
+export { insert, select, deleteItem };

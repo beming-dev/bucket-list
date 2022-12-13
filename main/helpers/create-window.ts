@@ -78,7 +78,7 @@ export default (
       nodeIntegration: true,
       contextIsolation: false,
       ...options.webPreferences,
-      preload: path.join(__dirname, "../main/helpers/preload.ts"),
+      // preload: path.join(__dirname, "../main/helpers/preload.ts"),
     },
   };
   win = new BrowserWindow(browserOptions);

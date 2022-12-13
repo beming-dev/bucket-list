@@ -39,6 +39,14 @@ ipcMain.on("enroll-bucket", (evt, payload) => {
   db.insert(payload);
 });
 
+ipcMain.on("send-bucket", (evt, payload) => {
+  db.insert(payload);
+});
+
+ipcMain.on("delete-bucket", (evt, payload) => {
+  db.deleteItem(payload);
+});
+
 ipcMain.handle("get-list", async (evt, payload) => {
   const result: listType = await db.select();
   return result;

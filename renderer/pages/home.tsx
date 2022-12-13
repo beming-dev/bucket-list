@@ -1,5 +1,6 @@
 import { ipcRenderer } from "electron";
 import { useEffect, useRef, useState } from "react";
+import ListItem from "../components/listItem";
 
 function Home() {
   const textarea = useRef<HTMLTextAreaElement>();
@@ -24,7 +25,6 @@ function Home() {
 
   useEffect(() => {
     ipcRenderer.invoke("get-list").then((result: listType) => {
-      console.log(result);
       setBucketList(result.bucket);
       setDoneList(result.done);
     });
@@ -37,7 +37,7 @@ function Home() {
         <ul className="list-inside list-disc">
           {bucketList.map(
             (item: bucketListType, i) => (
-              <li key={i}>{item.DES}</li>
+              <ListItem item={item} key={item.IDX} />
             ),
             []
           )}
@@ -48,7 +48,7 @@ function Home() {
           <span>Done</span>
           <ul className="list-inside list-disc">
             {doneList.map((item, i) => (
-              <li key={i}>{item.DES}</li>
+              <ListItem item={item} key={item.IDX} />
             ))}
           </ul>
         </div>

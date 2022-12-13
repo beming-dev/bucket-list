@@ -43,3 +43,5 @@ contextBridge.exposeInMainWorld(
     },
   }
 );
+
+export {};
