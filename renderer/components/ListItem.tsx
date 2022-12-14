@@ -1,11 +1,19 @@
 import { ipcRenderer } from "electron";
 import Image from "next/image";
 
-const ListItem = ({ item }) => {
+const ListItem = ({ item, setBucketList, setDoneList, bucket }) => {
   const onDeleteClick = (idx) => {
     const result = confirm("정말 지우시겠습니까?");
     if (result) {
-      ipcRenderer.send("delete-bucket", idx);
+      if (bucket) {
+        ipcRenderer
+          .invoke("delete-bucket", idx)
+          .then((result: listType) => setBucketList(result.bucket));
+      } else {
+        ipcRenderer
+          .invoke("delete-done", idx)
+          .then((result: listType) => setBucketList(result.bucket));
+      }
     } else {
       return;
     }
@@ -13,7 +21,10 @@ const ListItem = ({ item }) => {
   const onSendClick = (idx) => {
     const result = confirm("정말 완료했습니까?");
     if (result) {
-      ipcRenderer.send("send-bucket");
+      ipcRenderer.invoke("send-bucket", idx).then((result: listType) => {
+        setBucketList(result.bucket);
+        setDoneList(result.done);
+      });
     } else {
       return;
     }
@@ -25,12 +36,14 @@ const ListItem = ({ item }) => {
         <button className="mr-2" onClick={(e) => onDeleteClick(item.IDX)}>
           x
         </button>
-        <Image
-          src="/images/arrow.png"
-          width="20px"
-          height="20px"
-          onClick={(e) => onSendClick(item.IDX)}
-        />
+        {bucket && (
+          <Image
+            src="/images/arrow.png"
+            width="20px"
+            height="20px"
+            onClick={(e) => onSendClick(item.IDX)}
+          />
+        )}
       </div>
     </li>
   );

@@ -35,19 +35,32 @@ app.on("window-all-closed", () => {
 
 const db = require("./db/db.ts");
 
-ipcMain.on("enroll-bucket", (evt, payload) => {
-  db.insert(payload);
+const getList = async () => {
+  const result: listType = await db.selectAll();
+  return result;
+};
+
+ipcMain.handle("enroll-bucket", async (evt, des) => {
+  await db.insertBucket(des);
+  return getList();
 });
 
-ipcMain.on("send-bucket", (evt, payload) => {
-  db.insert(payload);
+ipcMain.handle("send-bucket", async (evt, id) => {
+  await db.move(id);
+
+  return getList();
 });
 
-ipcMain.on("delete-bucket", (evt, payload) => {
-  db.deleteItem(payload);
+ipcMain.handle("delete-bucket", async (evt, payload) => {
+  await db.deleteBucket(payload);
+  return getList();
+});
+
+ipcMain.handle("delete-done", async (evt, payload) => {
+  await db.deleteDone(payload);
+  return getList();
 });
 
 ipcMain.handle("get-list", async (evt, payload) => {
-  const result: listType = await db.select();
-  return result;
+  return getList();
 });

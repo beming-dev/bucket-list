@@ -4,12 +4,11 @@ import ListItem from "../components/ListItem";
 
 function Home() {
   const textarea = useRef<HTMLTextAreaElement>();
-  const box = useRef<HTMLFormElement>();
+  const box = useRef<HTMLDivElement>();
 
   const [des, setDes] = useState("");
   const [bucketList, setBucketList] = useState<bucketListType[]>([]);
   const [doneList, setDoneList] = useState<doneListType[]>([]);
-  const [trigger, setTrigger] = useState(false);
 
   const onChange = (e) => {
     setDes(e.target.value);
@@ -22,8 +21,9 @@ function Home() {
 
   const onEnrollBucket = (e) => {
     if (des.length >= 1) {
-      ipcRenderer.send("enroll-bucket", des);
-      setTrigger(!trigger);
+      ipcRenderer.invoke("enroll-bucket", des).then((result: listType) => {
+        setBucketList(result.bucket);
+      });
     }
   };
 
@@ -32,16 +32,22 @@ function Home() {
       setBucketList(result.bucket);
       setDoneList(result.done);
     });
-  }, [trigger]);
+  }, []);
 
   return (
     <main className="flex w-screen h-screen font-mono">
       <div className="w-1/2 bg-gray-600 p-3">
-        <span>Bucket-list</span>
+        <h2 className="text-xl text-gray-300 font-bold">Bucket-list</h2>
         <ul className="list-inside list-disc">
           {bucketList.map(
             (item: bucketListType, i) => (
-              <ListItem item={item} key={item.IDX} />
+              <ListItem
+                item={item}
+                key={item.IDX}
+                setBucketList={setBucketList}
+                setDoneList={setDoneList}
+                bucket={true}
+              />
             ),
             []
           )}
@@ -49,17 +55,22 @@ function Home() {
       </div>
       <div className="w-1/2 flex flex-col">
         <div className="bg-gray-400 basis-1/2 p-3">
-          <span>Done</span>
+          <h2 className="text-xl text-gray-800 font-bold">Done</h2>
           <ul className="list-inside list-disc">
             {doneList.map((item, i) => (
-              <ListItem item={item} key={item.IDX} />
+              <ListItem
+                item={item}
+                key={item.IDX}
+                setBucketList={setBucketList}
+                setDoneList={setDoneList}
+                bucket={false}
+              />
             ))}
           </ul>
         </div>
-        <form
+        <div
           ref={box}
           className="flex flex-col justify-center items-center bg-gray-500 basis-1/2 overflow-hidden"
-          onSubmit={onEnrollBucket}
         >
           <textarea
             maxLength={300}
@@ -68,8 +79,13 @@ function Home() {
             onChange={onChange}
             className="w-1/2 text-blue-500 outline-none p-1 break-all resize-none max-h-full text-sm scrollbar scrollbar-thumb-gray-300 scrollbar-track-gray-100 scrollbar-medium"
           />
-          <button className="rounded bg-blue-500 py-2 px-5 mt-5">등록</button>
-        </form>
+          <button
+            className="rounded bg-blue-500 py-2 px-5 mt-5"
+            onClick={onEnrollBucket}
+          >
+            등록
+          </button>
+        </div>
       </div>
     </main>
   );

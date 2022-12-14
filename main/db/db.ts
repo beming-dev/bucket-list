@@ -20,15 +20,28 @@ const createDone = db.prepare(
 createBucket.run();
 createDone.run();
 
-const insert = (arg) => {
+const insertBucket = (des) => {
   const insert = db.prepare(
     "INSERT INTO BUCKET(DES,DATE) VALUES(?, datetime('now'))"
   );
 
-  insert.run(arg);
+  insert.run(des);
 };
 
-const select = () => {
+const insertDone = (des, date) => {
+  const insert = db.prepare("INSERT INTO DONE(DES,DATE) VALUES(?, ?)");
+
+  insert.run([des, date]);
+};
+
+const selectBucket = (id) => {
+  const insert = db.prepare("SELECT * FROM BUCKET WHERE IDX=?");
+
+  const result = insert.get(id);
+  return result;
+};
+
+const selectAll = () => {
   const selectBucket = db.prepare(`SELECT * FROM BUCKET`);
   const selectDone = db.prepare(`SELECT * FROM DONE`);
   const bucketList: bucketListType[] = selectBucket.all();
@@ -42,9 +55,28 @@ const select = () => {
   return list;
 };
 
-const deleteItem = (id) => {
+const deleteBucket = (id) => {
   const deleteList = db.prepare(`DELETE FROM BUCKET WHERE IDX=?`);
   deleteList.run(id);
 };
+const deleteDone = (id) => {
+  const deleteList = db.prepare(`DELETE FROM DONE WHERE IDX=?`);
+  deleteList.run(id);
+};
 
-export { insert, select, deleteItem };
+const move = (id) => {
+  const item: bucketListType = selectBucket(id);
+  console.log(item);
+  deleteBucket(id);
+  insertDone(item.DES, item.DATE);
+};
+
+export {
+  insertBucket,
+  insertDone,
+  selectAll,
+  deleteBucket,
+  deleteDone,
+  selectBucket,
+  move,
+};
