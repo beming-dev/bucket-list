@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import { useEffect, useRef, useState } from "react";
-import ListItem from "../components/listItem";
+import ListItem from "../components/ListItem";
 
 function Home() {
   const textarea = useRef<HTMLTextAreaElement>();
@@ -9,6 +9,7 @@ function Home() {
   const [des, setDes] = useState("");
   const [bucketList, setBucketList] = useState<bucketListType[]>([]);
   const [doneList, setDoneList] = useState<doneListType[]>([]);
+  const [trigger, setTrigger] = useState(false);
 
   const onChange = (e) => {
     setDes(e.target.value);
@@ -20,7 +21,10 @@ function Home() {
   };
 
   const onEnrollBucket = (e) => {
-    if (des.length >= 1) ipcRenderer.send("enroll-bucket", des);
+    if (des.length >= 1) {
+      ipcRenderer.send("enroll-bucket", des);
+      setTrigger(!trigger);
+    }
   };
 
   useEffect(() => {
@@ -28,7 +32,7 @@ function Home() {
       setBucketList(result.bucket);
       setDoneList(result.done);
     });
-  }, []);
+  }, [trigger]);
 
   return (
     <main className="flex w-screen h-screen font-mono">

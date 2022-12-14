@@ -43,7 +43,6 @@ const select = () => {
 };
 
 const deleteItem = (id) => {
-  console.log(id);
   const deleteList = db.prepare(`DELETE FROM BUCKET WHERE IDX=?`);
   deleteList.run(id);
 };
