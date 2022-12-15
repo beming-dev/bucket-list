@@ -2,7 +2,6 @@ import { app } from "electron";
 import serve from "electron-serve";
 import { ipcMain } from "electron";
 import { createWindow } from "./helpers";
-import path from "path";
 
 const isProd: boolean = process.env.NODE_ENV === "production";
 
@@ -37,6 +36,7 @@ const db = require("./db/db.ts");
 
 const getList = async () => {
   const result: listType = await db.selectAll();
+  console.log(result);
   return result;
 };
 

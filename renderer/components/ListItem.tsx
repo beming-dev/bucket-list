@@ -1,7 +1,13 @@
 import { ipcRenderer } from "electron";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const ListItem = ({ item, setBucketList, setDoneList, bucket }) => {
+  const router = useRouter();
+
+  const onItemClick = () => {
+    router.push(`/detail/${bucket ? "bucket" : "done"}/${item.IDX}`);
+  };
   const onDeleteClick = (idx) => {
     const result = confirm("정말 지우시겠습니까?");
     if (result) {
@@ -12,7 +18,7 @@ const ListItem = ({ item, setBucketList, setDoneList, bucket }) => {
       } else {
         ipcRenderer
           .invoke("delete-done", idx)
-          .then((result: listType) => setBucketList(result.bucket));
+          .then((result: listType) => setDoneList(result.done));
       }
     } else {
       return;
@@ -30,7 +36,7 @@ const ListItem = ({ item, setBucketList, setDoneList, bucket }) => {
     }
   };
   return (
-    <li className="flex w-full my-1 items-center">
+    <li className="flex w-full my-1 items-center" onClick={onItemClick}>
       <span className="flex-1">{item.DES}</span>
       <div className="flex justify-self-end ml-3 items-center">
         <button className="mr-2" onClick={(e) => onDeleteClick(item.IDX)}>
