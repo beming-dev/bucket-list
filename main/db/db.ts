@@ -10,15 +10,27 @@ const db = new SQLITE(dbPath, SQLITE.OPEN_READWRITE, (err) => {
 db.pragma("journal_mode = WAL");
 
 const createBucket = db.prepare(
-  "CREATE TABLE IF NOT EXISTS BUCKET ( IDX INTEGER PRIMARY KEY, DES TEXT, DATE TEXT )"
+  `CREATE TABLE 
+  IF NOT EXISTS BUCKET ( 
+    IDX INTEGER PRIMARY KEY AUTOINCREMENT, 
+    DES TEXT, 
+    DATE TEXT, 
+    DONE INTEGER DEFAULT 0
+  )`
 );
 
-const createDone = db.prepare(
-  "CREATE TABLE IF NOT EXISTS DONE ( IDX INTEGER PRIMARY KEY, DES TEXT, DATE TEXT )"
+const createDetail = db.prepare(
+  `CREATE TABLE 
+  IF NOT EXISTS DETAIL( 
+    IDX INTEGER PRIMARY KEY AUTOINCREMENT, 
+    FID INTEGER, 
+    DES TEXT,
+    FOREIGN KEY(FID) REFERENCES BUCKET(IDX)
+  )`
 );
 
 createBucket.run();
-createDone.run();
+createDetail.run();
 
 const insertBucket = (des) => {
   const insert = db.prepare(
@@ -28,10 +40,16 @@ const insertBucket = (des) => {
   insert.run(des);
 };
 
-const insertDone = (des, date) => {
-  const insert = db.prepare("INSERT INTO DONE(DES,DATE) VALUES(?, ?)");
+const insertDone = (idx, des, date) => {
+  const insert = db.prepare("INSERT INTO DONE(IDX, DES,DATE) VALUES(?, ?, ?)");
 
-  insert.run([des, date]);
+  insert.run([idx, des, date]);
+};
+
+const insertDetail = (fid, des) => {
+  const insert = db.prepare("INSERT INTO DETAIL(FID, DES) VALUES(?, ?)");
+
+  insert.run([fid, des]);
 };
 
 const selectBucket = (id) => {
@@ -41,9 +59,23 @@ const selectBucket = (id) => {
   return result;
 };
 
+const selectDone = (id) => {
+  const insert = db.prepare("SELECT * FROM DONE WHERE IDX=?");
+
+  const result = insert.get(id);
+  return result;
+};
+
+const selectDetail = (id) => {
+  const insert = db.prepare("SELECT * FROM DETAIL WHERE FID=?");
+
+  const result = insert.get(id);
+  return result;
+};
+
 const selectAll = () => {
-  const selectBucket = db.prepare(`SELECT * FROM BUCKET`);
-  const selectDone = db.prepare(`SELECT * FROM DONE`);
+  const selectBucket = db.prepare(`SELECT * FROM BUCKET WHERE DONE=0`);
+  const selectDone = db.prepare(`SELECT * FROM BUCKET WHERE DONE=1`);
   const bucketList: bucketListType[] = selectBucket.all();
   const doneList: doneListType[] = selectDone.all();
 
@@ -66,17 +98,37 @@ const deleteDone = (id) => {
 
 const move = (id) => {
   const item: bucketListType = selectBucket(id);
-  console.log(item);
   deleteBucket(id);
-  insertDone(item.DES, item.DATE);
+  insertDone(item.IDX, item.DES, item.DATE);
+};
+
+const executeQuery = (query: queryType) => {
+  const prepared = db.prepare(query.sql);
+  if (query.sql.includes("SELECT")) {
+    return prepared.get(query.value);
+  } else {
+    prepared.run(query.value);
+  }
+};
+
+const executeQueries = (queries: queryType[]) => {
+  const transaction = db.transaction((queries) => {
+    for (const query of queries) executeQuery(query);
+  });
+  transaction();
 };
 
 export {
   insertBucket,
   insertDone,
+  insertDetail,
   selectAll,
   deleteBucket,
   deleteDone,
   selectBucket,
+  selectDone,
+  selectDetail,
   move,
+  executeQuery,
+  executeQueries,
 };

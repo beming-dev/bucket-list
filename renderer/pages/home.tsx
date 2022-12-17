@@ -21,9 +21,15 @@ function Home() {
 
   const onEnrollBucket = (e) => {
     if (des.length >= 1) {
-      ipcRenderer.invoke("enroll-bucket", des).then((result: listType) => {
-        setBucketList(result.bucket);
-      });
+      const query: queryType[] = [
+        {
+          sql: "INSERT INTO BUCKET(DES,DATE) VALUES(?, datetime('now'))",
+          value: [des],
+        },
+      ];
+      ipcRenderer
+        .invoke("execute-query", query)
+        .then((result) => setBucketList(result.bucket));
     }
   };
 

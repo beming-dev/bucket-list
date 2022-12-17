@@ -40,27 +40,16 @@ const getList = async () => {
   return result;
 };
 
-ipcMain.handle("enroll-bucket", async (evt, des) => {
-  await db.insertBucket(des);
-  return getList();
-});
-
-ipcMain.handle("send-bucket", async (evt, id) => {
-  await db.move(id);
-
-  return getList();
-});
-
-ipcMain.handle("delete-bucket", async (evt, payload) => {
-  await db.deleteBucket(payload);
-  return getList();
-});
-
-ipcMain.handle("delete-done", async (evt, payload) => {
-  await db.deleteDone(payload);
-  return getList();
-});
-
 ipcMain.handle("get-list", async (evt, payload) => {
+  return getList();
+});
+
+ipcMain.handle("execute-query", async (evt, payload: queryType[]) => {
+  if (payload.length === 1) {
+    await db.executeQuery(payload[0]);
+  } else {
+    await db.executeQueries(payload);
+  }
+
   return getList();
 });

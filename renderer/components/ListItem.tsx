@@ -27,7 +27,13 @@ const ListItem = ({ item, setBucketList, setDoneList, bucket }) => {
   const onSendClick = (idx) => {
     const result = confirm("정말 완료했습니까?");
     if (result) {
-      ipcRenderer.invoke("send-bucket", idx).then((result: listType) => {
+      const query: queryType[] = [
+        {
+          sql: `UPDATE BUCKET SET DONE=1 WHERE IDX=? `,
+          value: [idx],
+        },
+      ];
+      ipcRenderer.invoke("execute-query", query).then((result) => {
         setBucketList(result.bucket);
         setDoneList(result.done);
       });
@@ -36,8 +42,10 @@ const ListItem = ({ item, setBucketList, setDoneList, bucket }) => {
     }
   };
   return (
-    <li className="flex w-full my-1 items-center" onClick={onItemClick}>
-      <span className="flex-1">{item.DES}</span>
+    <li className="flex w-full my-1 items-center">
+      <span onClick={onItemClick} className="flex-1">
+        {item.DES}
+      </span>
       <div className="flex justify-self-end ml-3 items-center">
         <button className="mr-2" onClick={(e) => onDeleteClick(item.IDX)}>
           x

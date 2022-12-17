@@ -22,3 +22,8 @@ interface listType {
   bucket: bucketListType[];
   done: doneListType[];
 }
+
+interface queryType {
+  sql: string;
+  value: any[];
+}
