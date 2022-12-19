@@ -25,7 +25,10 @@ const createDetail = db.prepare(
     IDX INTEGER PRIMARY KEY AUTOINCREMENT, 
     FID INTEGER, 
     DES TEXT,
-    FOREIGN KEY(FID) REFERENCES BUCKET(IDX)
+    CONSTRAINT foreign_key
+      FOREIGN KEY(FID) 
+      REFERENCES BUCKET(IDX)
+      ON DELETE CASCADE
   )`
 );
 
@@ -108,6 +111,7 @@ const executeQuery = (query: queryType) => {
     return prepared.get(query.value);
   } else {
     prepared.run(query.value);
+    return selectAll();
   }
 };
 

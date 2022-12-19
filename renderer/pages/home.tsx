@@ -52,7 +52,6 @@ function Home() {
                 key={item.IDX}
                 setBucketList={setBucketList}
                 setDoneList={setDoneList}
-                bucket={true}
               />
             ),
             []

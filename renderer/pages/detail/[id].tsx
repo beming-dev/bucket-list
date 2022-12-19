@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 const detail = () => {
-  const [des, setDes] = useState("hello");
+  const [des, setDes] = useState("");
   const router = useRouter();
 
   const box = useRef<HTMLDivElement>();
@@ -18,15 +18,17 @@ const detail = () => {
     }
   };
 
-  const { type, id } = router.query;
+  const { id } = router.query;
   useEffect(() => {
     const query: queryType[] = [
       {
-        sql: "SELECT * FROM DETAIL ",
-        value: [],
+        sql: "SELECT * FROM DETAIL WHERE IDX=?",
+        value: [id],
       },
     ];
-    ipcRenderer.invoke("execute-query", query);
+    ipcRenderer.invoke("execute-query", query).then((result: detailType) => {
+      setDes(result?.DES || "");
+    });
   }, []);
 
   const onSaveDetail = () => {
@@ -51,7 +53,7 @@ const detail = () => {
       >
         <textarea
           rows={1}
-          defaultValue={des}
+          value={des}
           ref={textarea}
           className="w-1/2 bg-gray-500 resize-none outline-0 text-center border-2 border-solid rounded-lg border-gray-400 py-1"
           onChange={onChange}

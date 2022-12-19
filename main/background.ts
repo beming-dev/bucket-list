@@ -46,10 +46,8 @@ ipcMain.handle("get-list", async (evt, payload) => {
 
 ipcMain.handle("execute-query", async (evt, payload: queryType[]) => {
   if (payload.length === 1) {
-    await db.executeQuery(payload[0]);
+    return await db.executeQuery(payload[0]);
   } else {
-    await db.executeQueries(payload);
+    return await db.executeQueries(payload);
   }
-
-  return getList();
 });

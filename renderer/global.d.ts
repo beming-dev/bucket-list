@@ -6,6 +6,12 @@ declare global {
   }
 }
 
+interface detailType {
+  IDX: number;
+  FID: number;
+  DES: string;
+}
+
 interface bucketListType {
   IDX: number;
   DES: string;
