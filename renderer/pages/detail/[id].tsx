@@ -22,7 +22,7 @@ const detail = () => {
   useEffect(() => {
     const query: queryType[] = [
       {
-        sql: "SELECT * FROM DETAIL WHERE IDX=?",
+        sql: "SELECT * FROM DETAIL WHERE FID=?",
         value: [id],
       },
     ];

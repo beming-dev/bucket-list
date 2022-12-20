@@ -2,7 +2,13 @@ import { ipcRenderer } from "electron";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-const ListItem = ({ item, setBucketList, setDoneList }) => {
+interface propsType {
+  item: bucketListType;
+  setBucketList: any;
+  setDoneList: any;
+}
+
+const ListItem = ({ item, setBucketList, setDoneList }: propsType) => {
   const router = useRouter();
 
   const onItemClick = () => {
@@ -44,21 +50,21 @@ const ListItem = ({ item, setBucketList, setDoneList }) => {
   };
   return (
     <li className="flex w-full my-1 items-center">
-      <span onClick={onItemClick} className="flex-1">
+      <span onClick={onItemClick} className="flex-1 cursor-pointer">
         {item.DES}
       </span>
       <div className="flex justify-self-end ml-3 items-center">
         <button className="mr-2" onClick={(e) => onDeleteClick(item.IDX)}>
           x
         </button>
-        {
+        {item.DONE == false && (
           <Image
             src="/images/arrow.png"
             width="20px"
             height="20px"
             onClick={(e) => onSendClick(item.IDX)}
           />
-        }
+        )}
       </div>
     </li>
   );

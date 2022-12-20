@@ -16,12 +16,7 @@ interface bucketListType {
   IDX: number;
   DES: string;
   DATE: string;
-}
-
-interface doneListType {
-  IDX: number;
-  DES: string;
-  DATE: string;
+  DONE: boolean;
 }
 
 interface listType {
