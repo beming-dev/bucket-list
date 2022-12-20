@@ -35,11 +35,24 @@ const detail = () => {
     const query: queryType[] = [
       //Todo: upsert
       {
-        sql: "INSERT INTO DETAIL(FID, DES) VALUES(?, ?)",
+        sql: `
+          INSERT INTO DETAIL(FID, DES)
+          VALUES(?, ?)
+          ON CONFLICT(FID)
+          DO UPDATE SET DES = excluded.DES
+        `,
         value: [id, des],
       },
     ];
-    ipcRenderer.invoke("execute-query", query);
+
+    ipcRenderer
+      .invoke("execute-query", query)
+      .then(() => {
+        alert("내용이 저장되었습니다.");
+      })
+      .catch((err) => {
+        alert("저장 중 오류 발생");
+      });
   };
 
   return (
@@ -52,6 +65,7 @@ const detail = () => {
         className="relative w-2/3 h-2/3 bg-gray-500 rounded-lg flex flex-col justify-center items-center"
       >
         <textarea
+          placeholder="내용을 입력해주세요"
           rows={1}
           value={des}
           ref={textarea}

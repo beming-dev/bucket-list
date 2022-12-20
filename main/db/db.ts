@@ -25,6 +25,7 @@ const createDetail = db.prepare(
     IDX INTEGER PRIMARY KEY AUTOINCREMENT, 
     FID INTEGER, 
     DES TEXT,
+    UNIQUE(FID),
     CONSTRAINT foreign_key
       FOREIGN KEY(FID) 
       REFERENCES BUCKET(IDX)
