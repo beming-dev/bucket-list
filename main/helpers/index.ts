@@ -1,5 +1,4 @@
-import createWindow from './create-window';
+import createWindow from "./create-window";
+import { ipcRenderer } from "electron";
 
-export {
-  createWindow,
-};
+export { createWindow, ipcRenderer };
