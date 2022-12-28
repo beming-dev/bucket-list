@@ -1,7 +1,8 @@
 import path from "path";
 const SQLITE = require("better-sqlite3");
 
-let dbPath = path.join(__dirname, "../sqliteDB/bucketlist.db");
+let dbPath = path.join(__dirname, "./bucketlist.db");
+dbPath = "C://database/bucketlist.db";
 
 const db = new SQLITE(dbPath, SQLITE.OPEN_READWRITE, (err) => {
   if (err) console.log(err.message);

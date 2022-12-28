@@ -1,5 +1,4 @@
 import { ipcRenderer } from "electron";
-import Image from "next/image";
 import { useRouter } from "next/router";
 
 interface propsType {
@@ -58,14 +57,21 @@ const ListItem = ({ item, setBucketList, setDoneList }: propsType) => {
           x
         </button>
         {item.DONE == false && (
-          <Image
+          <img
             src="/images/arrow.png"
-            width="20px"
-            height="20px"
             onClick={(e) => onSendClick(item.IDX)}
+            className="arrow"
           />
         )}
       </div>
+      <style jsx>
+        {`
+          .arrow {
+            width: 20px;
+            height: 20px;
+          }
+        `}
+      </style>
     </li>
   );
 };

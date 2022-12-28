@@ -8,7 +8,7 @@ function Home() {
 
   const [des, setDes] = useState("");
   const [bucketList, setBucketList] = useState<bucketListType[]>([]);
-  const [doneList, setDoneList] = useState<doneListType[]>([]);
+  const [doneList, setDoneList] = useState<bucketListType[]>([]);
 
   const onChange = (e) => {
     setDes(e.target.value);
@@ -68,7 +68,6 @@ function Home() {
                 key={item.IDX}
                 setBucketList={setBucketList}
                 setDoneList={setDoneList}
-                bucket={false}
               />
             ))}
           </ul>
