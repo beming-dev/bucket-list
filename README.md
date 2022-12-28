@@ -1,38 +1,18 @@
-<p align="center"><img src="https://i.imgur.com/a9QWW0v.png"></p>
+# 용도
 
-## Usage
+버킷리스트 관리 용도의 앱
 
-### Create an App
-
-```
-# with npx
-$ npx create-nextron-app my-app --example with-typescript-tailwindcss
-
-# with yarn
-$ yarn create nextron-app my-app --example with-typescript-tailwindcss
-
-# with pnpx
-$ pnpx create-nextron-app my-app --example with-typescript-tailwindcss
-```
-
-### Install Dependencies
+# 사용
 
 ```
-$ cd my-app
-
-# using yarn or npm
-$ yarn (or `npm install`)
-
-# using pnpm
-$ pnpm install --shamefully-hoist
+git clone https://github.com/beming-dev/bucket-list
 ```
 
-### Use it
-
 ```
-# development mode
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
-
-# production build
-$ yarn build (or `npm run build` or `pnpm run build`)
+yarn
+yarn build
 ```
+
+프로젝트 폴더/dist/win-unpacked/~.exe 실행
+
+C://database/bucketlist.db 존재해야 사용가능
